@@ -21,7 +21,15 @@ def turnLeft():
     move.publish(135)
 
 def turnRight():
-    print('Turn Right')
+    global leftValue
+    clearOdeometry = rospy.Publisher('pattern', Bool, queue_size=1)
+    clearOdeometry.publish(True)
+    move = rospy.Publisher('channel_x', Int16, queue_size=1)
+    move.publish(95)
+    while not leftValue >= 953:
+        None
+    clearOdeometry.publish(True)
+    move.publish(135)
 
 def stopGoAhead(odemetryValue, meters):
     return (odemetryValue/1200.0)*3.14*0.34 >= meters
