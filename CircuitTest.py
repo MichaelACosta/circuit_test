@@ -1,3 +1,5 @@
+import csv
+
 def stop():
     print('Stop')
 
@@ -14,22 +16,17 @@ def goAhead(meters):
     print(stopGoAhead(4320.0, meters))
 
 def listener():
-    goAhead(9.0)
-    turnLeft()
-    goAhead(5.0)
-    turnRight()
-    goAhead(7.8)
-    turnLeft()
-    goAhead(3.6)
-    turnLeft()
-    goAhead(3.0)
-    turnLeft()
-    goAhead(3.6)
-    turnRight()
-    goAhead(13.2)
-    turnLeft()
-    goAhead(5.4)
-    stop()
+    with open('circuit.csv') as csvfile:
+        readLine = csv.reader(csvfile, delimiter='\n')
+        for line in readLine:
+            if line[0] == 'R':
+                turnRight()
+            elif line[0] == 'L':
+                turnLeft()
+            elif line[0] == 'S':
+                stop()
+            else:
+                goAhead(line[0])
 
 if __name__ == '__main__':
     listener()
