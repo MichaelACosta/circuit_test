@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import csv
 from std_msgs.msg import Int16
 from std_msgs.msg import Bool
 
@@ -47,22 +48,17 @@ def goAhead(meters):
     move.publish(135)
 
 def listener():
-    goAhead(9.0)
-    turnLeft()
-    goAhead(5.0)
-    turnRight()
-    goAhead(7.8)
-    turnLeft()
-    goAhead(3.6)
-    turnLeft()
-    goAhead(3.0)
-    turnLeft()
-    goAhead(3.6)
-    turnRight()
-    goAhead(13.2)
-    turnLeft()
-    goAhead(5.4)
-    stop()
+    with open('circuit.csv') as csvfile:
+        readLine = csv.reader(csvfile, delimiter='\n')
+        for line in readLine:
+            if line[0] == 'R':
+                turnRight()
+            elif line[0] == 'L':
+                turnLeft()
+            elif line[0] == 'S':
+                stop()
+            else:
+                goAhead(line[0])
 
 if __name__ == '__main__':
     listener()
