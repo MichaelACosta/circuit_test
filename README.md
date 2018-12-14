@@ -1,4 +1,8 @@
-#Circuit is:
+# Circuit:
+
+This project uses the .csv to read a circuit that robot will go execute.
+
+## The circuit is:
 
 9 meters ahead
 Turn Left
