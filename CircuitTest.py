@@ -77,7 +77,7 @@ def stopMoviment():
     stop = rospy.Publisher('channel_y', Int16, queue_size=1)
     stop.publish(135)
 
-def listener():
+def makeCircuit():
     with open('circuit.csv') as csvfile:
         readLine = csv.reader(csvfile, delimiter='\n')
         for line in readLine:
@@ -90,5 +90,24 @@ def listener():
             else:
                 goAhead(line[0])
 
+def callbackLeft(data):
+    global leftValue
+    leftValue = int(data.data)
+
+def callbackRight(data):
+    global rightValue
+    rightValue = int(data.data)
+
+def callbackWalk(data):
+    if (data.data == 'makeCircuit'):
+        makeCircuit()
+
+def listener():
+    rospy.Subscriber("left_sensor", Int16, callbackLeft)
+    rospy.Subscriber("right_sensor", Int16, callbackRight)
+    rospy.Subscriber("walk", String, callbackWalk)
+    rospy.spin()
+
 if __name__ == '__main__':
+    rospy.init_node('test', anonymous=True)
     listener()
