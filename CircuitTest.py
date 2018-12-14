@@ -12,14 +12,22 @@ def stop():
 
 def turnLeft():
     global rightValue
-    clearOdeometry = rospy.Publisher('pattern', Bool, queue_size=1)
-    clearOdeometry.publish(True)
+    try:
+        startMovimentTurnLeft()
+    except rospy.ROSInterruptException:
+        pass
+    while not rightValue >= 953:
+        rospy.spin()
+    try:
+        stopMoviment()
+    except rospy.ROSInterruptException:
+        pass
+
+def startMovimentTurnLeft():
+    pub = rospy.Publisher('pattern', Bool, queue_size=1)
+    pub.publish(True)
     move = rospy.Publisher('channel_x', Int16, queue_size=1)
     move.publish(175)
-    while not rightValue >= 953:
-        None
-    clearOdeometry.publish(True)
-    move.publish(135)
 
 def turnRight():
     global leftValue
@@ -46,6 +54,12 @@ def goAhead(meters):
         None
     clearOdeometry.publish(True)
     move.publish(135)
+
+def stopMoviment():
+    pub = rospy.Publisher('pattern', Bool, queue_size=1)
+    pub.publish(True)
+    stop = rospy.Publisher('channel_y', Int16, queue_size=1)
+    stop.publish(135)
 
 def listener():
     with open('circuit.csv') as csvfile:
