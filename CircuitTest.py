@@ -54,14 +54,22 @@ def stopGoAhead(odemetryValue, meters):
 def goAhead(meters):
     global leftValue
     global rightValue
-    clearOdeometry = rospy.Publisher('pattern', Bool, queue_size=1)
-    clearOdeometry.publish(True)
+    try:
+        startMovimentAhead()
+    except rospy.ROSInterruptException:
+        pass
+    while not (stopGoAhead(rightValue, meters) or stopGoAhead(leftValue, meters)):
+        rospy.spin()
+    try:
+        stopMoviment()
+    except rospy.ROSInterruptException:
+        pass
+
+def startMovimentAhead():
+    pub = rospy.Publisher('pattern', Bool, queue_size=1)
+    pub.publish(True)
     move = rospy.Publisher('channel_y', Int16, queue_size=1)
     move.publish(175)
-    while not (stopGoAhead(rightValue, meters) or stopGoAhead(leftValue, meters)):
-        None
-    clearOdeometry.publish(True)
-    move.publish(135)
 
 def stopMoviment():
     pub = rospy.Publisher('pattern', Bool, queue_size=1)
